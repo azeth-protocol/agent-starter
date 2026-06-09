@@ -86,14 +86,14 @@ This template includes a pre-configured `.claude/settings.json`. Just add your p
 ```bash
 # In Claude Code
 echo '{ "AZETH_PRIVATE_KEY": "0x..." }' > .env
-# Now Claude has access to 32 Azeth tools
+# Now Claude has access to 34 Azeth tools
 ```
 
 Ask Claude: *"Create me a smart account and register as a weather data service"*
 
 ## Links
 
-- [MCP Server](https://www.npmjs.com/package/@azeth/mcp-server) — 32 tools for AI agents
+- [MCP Server](https://www.npmjs.com/package/@azeth/mcp-server) — 34 tools for AI agents
 - [SDK](https://www.npmjs.com/package/@azeth/sdk) — TypeScript SDK
 - [Provider](https://www.npmjs.com/package/@azeth/provider) — x402 middleware for Hono
 - [Website](https://azeth.ai)
