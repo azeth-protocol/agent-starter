@@ -13,8 +13,8 @@
     "start:server": "node dist/server.js"
   },
   "dependencies": {
-    "@azeth/sdk": "^0.2.0",
-    "@azeth/provider": "^0.2.0",
+    "@azeth/sdk": "^0.2.22",
+    "@azeth/provider": "^0.2.21",
     "hono": "^4.7.0",
     "@hono/node-server": "^1.13.0",
     "dotenv": "^16.4.0"

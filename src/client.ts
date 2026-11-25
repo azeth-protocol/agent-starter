@@ -62,8 +62,10 @@ async function main() {
   // 4. Check reputation before trusting
   console.log('\nChecking provider reputation...');
   const reputation = await agent.getWeightedReputation(service.tokenId);
-  console.log(`  Score: ${reputation.compositeScore}/100`);
-  console.log(`  Interactions: ${reputation.totalInteractions}`);
+  // weightedValue is 18-decimal fixed point on a -100..100 scale, weighted by USD paid
+  const score = reputation.opinionCount > 0n ? Number(reputation.weightedValue) / 1e18 : 0;
+  console.log(`  Weighted score: ${score.toFixed(1)} (range -100..100)`);
+  console.log(`  Opinions: ${reputation.opinionCount}`);
 
   // 5. Pay for the service via x402
   console.log('\nPaying for weather data via x402...');
@@ -74,14 +76,21 @@ async function main() {
   console.log(`  Response time: ${responseTimeMs}ms`);
 
   // 6. Rate the provider on-chain
+  // Opinions are payment-gated: the ReputationModule requires >= $1 net USD paid
+  // to the provider before accepting a rating (anti-Sybil protection).
   console.log('\nRating provider on-chain...');
-  await agent.submitOpinion({
-    serviceTokenId: service.tokenId,
-    success: true,
-    responseTimeMs,
-    qualityScore: 85,
-  });
-  console.log('  Opinion submitted! Provider reputation updated.');
+  try {
+    await agent.submitOpinion({
+      serviceTokenId: service.tokenId,
+      rating: 85, // -100 to 100
+      tag1: 'quality',
+      endpoint: service.endpoint,
+    });
+    console.log('  Opinion submitted! Provider reputation updated.');
+  } catch (err) {
+    console.log(`  Opinion not accepted yet: ${err instanceof Error ? err.message : String(err)}`);
+    console.log('  Ratings unlock after >= $1 total net payment to the provider.');
+  }
 
   console.log('\n--- Complete ---');
   console.log('The provider now has a better reputation score.');
